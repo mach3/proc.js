@@ -1,0 +1,17 @@
+{
+  "name": "proc.js",
+  "version": "0.0.0",
+  "description": "",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "mach3 <http://github.com/mach3>",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "~0.4",
+    "grunt-contrib-uglify": "~0.3",
+    "grunt-contrib-concat": "~0.3"
+  }
+}

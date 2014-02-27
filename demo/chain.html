@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+
+    <h1>$.Chain</h1>
+    <pre id="log"></pre>
+
+    <script src="../bower_components/jquery/jquery.js"></script>
+    <script src="../src/proc.chain.js"></script>
+    <script src="../src/proc.js"></script>
+    <script>
+
+    var log = function(){
+        var args = Array.prototype.slice.call(arguments);
+        $("#log").append(args.join(" ") + "\n");
+    };
+
+    var chain = $.proc("chain");
+    var stack = [];
+
+    stack.add = function(value){
+        this.push(value);
+        log("> push", value);
+    };
+
+    chain.append([
+        function(){
+            log("State:", 1);
+            var df = this.deferred();
+            stack.add(1);
+            setTimeout(function(){
+                stack.add(2);
+                df.resolve();
+            }, 1000);
+            return df;
+        },
+        function(){
+            log("State:", 2);
+            stack.push(3);
+            log("> push", 3);
+            return this.delay(3000);
+        },
+        function(){
+            log("State:", 3);
+            var df = this.deferred();
+            stack.add(4);
+            setTimeout(function(){
+                stack.add(5);
+                df.resolve();
+            }, 1000);
+            return df;
+        },
+        function(){
+            log("State:", 4);
+            stack.add(6);
+        }
+    ]);
+
+    chain.run().then(function(){
+        log("--all done--");
+        log(stack.join(","));
+    });
+
+    </script>
+    
+</body>
+</html>

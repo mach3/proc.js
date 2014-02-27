@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+
+    <h1>$.Frames</h1>
+
+    <pre id="log"></pre>
+
+    <script src="../bower_components/jquery/jquery.js"></script>
+    <script src="../src/proc.chain.js"></script>
+    <script src="../src/proc.frames.js"></script>
+
+    <script>
+
+    var log = function(){
+        var args = Array.prototype.slice.call(arguments);
+        $("#log").append(args.join(" ") + "\n");
+    };
+
+    var chain = new $.Chain();
+
+    chain.append([
+        function(){
+            var f, df = this.deferred();
+
+            log("Demo: A");
+
+            f = new $.Frames({duration: 4000});
+            f.append([
+                {
+                    time: 3000,
+                    callback: function(){
+                        log("> time:", 3000);
+                    }
+                },
+                {
+                    time: 1000,
+                    callback: function(){
+                        log("> time:", 1000);
+                    }
+                },
+                {
+                    time: 8000,
+                    callback: function(){
+                        log("> time:", 8000);
+                    }
+                },
+                {
+                    time: 2000,
+                    callback: function(){
+                        log("> time:", 2000);
+                    }
+                }
+            ])
+            .run()
+            .done(function(){
+                log("> complete");
+                df.resolve();
+            })
+            .fail(function(){
+                log("> rejected");
+            });
+            return df;
+        },
+        function(){
+            var f, df = this.deferred();
+
+            log("Demo: B");
+
+            f = new $.Frames({duration: 4000});
+            f.append([
+                {
+                    time: 1000,
+                    callback: function(){
+                        log("> time:", 1000);
+                    }
+                },
+                {
+                    time: 2000,
+                    callback: function(){
+                        log("> time:", 2000);
+                        return false;
+                    }
+                },
+                {
+                    time: 3000,
+                    callback: function(){
+                        log("> time:", 3000);
+                    }
+                }
+            ])
+            .run()
+            .done(function(){
+                log("> complete");
+                df.resolve();
+            })
+            .fail(function(){
+                log("> rejected");
+                df.resolve();
+            });
+            return df;
+        },
+        function(){
+            var f, df = this.deferred();
+
+            log("Demo: C");
+
+            f = new $.Frames({duration: 4000});
+            f.append([
+                {
+                    time: 1000,
+                    callback: function(){
+                        log("> time:", 1000);
+                    }
+                },
+                {
+                    time: 2000,
+                    callback: function(){
+                        log("> time:", 2000);
+                        f.stop();
+                    }
+                },
+                {
+                    time: 3000,
+                    callback: function(){
+                        log("> time:", 3000);
+                    }
+                }
+            ])
+            .run()
+            .done(function(){
+                log("> complete");
+                df.resolve();
+            })
+            .fail(function(){
+                log("> rejected or stopped");
+                df.resolve();
+            });
+            return df;
+        }
+    ])
+    .run()
+    .done(function(){
+        log("--Finish--");
+    });
+
+    </script>
+    
+</body>
+</html>

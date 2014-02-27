@@ -1,0 +1,19 @@
+{
+  "name": "proc.js",
+  "version": "0.0.0",
+  "authors": [
+    "mach3 <http://github.com/mach3>"
+  ],
+  "main": "dist/proc.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "1"
+  }
+}

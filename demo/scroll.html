@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+
+        body {
+            height: 9999px;
+            margin: 0;
+            position: relative;
+            background-color: #222;
+            color: #fff;
+        }
+        .section {
+            border-bottom: 1px solid #222;
+        }
+        .section h1 {
+            margin: 0;
+            padding: .5em;
+        }
+        .head {
+            background-color: #369;
+            height: 300px;
+        }
+        .foo {
+            background-color: #936;
+            height: 500px;
+        }
+        .bar {
+            background-color: #693;
+            height: 800px;
+        }
+        .baz {
+            background-color: #396;
+            height: 800px;
+        }
+        .profile {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 320px;
+            height: 320px;
+            background-color: rgba(0, 0, 0, .5);
+            overflow: auto;
+        }
+        .profile ul {
+            color: #fff;
+            list-style-type: none;
+            font-size: 13px;
+            margin: 0;
+            padding: 1em;
+        }
+        .profile ul li:before {
+            content: ">";
+            color: rgba(255, 255,255, .3);
+            margin-right: .5em;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="profile">
+        <ul id="log"></ul>
+    </div>
+    <div class="section head">
+        <h1>$.Scroll</h1>
+    </div>
+    <div class="section foo">
+        <h1>Foo</h1>
+    </div>
+    <div class="section bar">
+        <h1>Bar</h1>
+    </div>
+    <div class="section baz">
+        <h1>Baz</h1>
+    </div>
+
+    <script src="../bower_components/jquery/jquery.js"></script>
+    <script src="../src/proc.scroll.js"></script>
+    <script src="../src/proc.js"></script>
+    <script>
+
+    var log = function(){
+        var args = Array.prototype.slice.call(arguments);
+        $("<li>").text(args.join(" ")).hide().prependTo("#log").fadeIn();
+    };
+
+    var scroll = $.proc("scroll", {
+        useAnimationFrame: false
+    });
+
+
+    scroll.append({
+        name: "foo",
+        top: $(".foo").offset().top,
+        down: function(){
+            log(this.name, ":down (once)");
+            return false;
+        },
+        up: function(){
+            log(this.name, ":up (once)");
+            return false;
+        },
+        hover: function(){
+            log(this.name, ":hover (once)");
+            return false;
+        }
+    });
+
+    scroll.append({
+        name: "bar",
+        top: $(".bar").offset().top,
+        down: function(){
+            log(this.name, ":down");
+        },
+        up: function(){
+            log(this.name, ":up");
+        },
+        hover: function(){
+            log(this.name, ":hover");
+        }
+    }, {
+        name: "baz",
+        top: $(".baz").offset().top,
+        down: function(){
+            log(this.name, ":down");
+        },
+        up: function(){
+            log(this.name, ":up");
+        },
+        hover: function(){
+            log(this.name, ":hover");
+        }
+    });
+
+    scroll.on("state", function(){
+        log("STATE CHANGED");
+    });
+
+    scroll.run();
+
+    </script>
+
+</body>
+</html>
